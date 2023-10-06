@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from apps.election.models import City, Country, Candidates, Election
 from django.http import JsonResponse
+import matplotlib
 from django.db.models import (
     Sum,
     Count,
@@ -12,6 +13,7 @@ from django.db.models import (
     DecimalField,
     IntegerField,
     Expression,
+    Max,
 )
 
 
@@ -36,17 +38,25 @@ def election_details(request, city_id):
     total_count = instance.aggregate(total_count=Sum("count"))["total_count"]
     print("total_count", total_count)
     election_group = (
-        instance.values("candidate")
+        instance.select_related("candidate")
+        .values("candidate")
         .annotate(
             candidate_total_count=Sum("count"),
-            total_count=Value(total_count, output_field=FloatField()),
+            total_count=Value(total_count),
             percent=ExpressionWrapper(
-                (F("candidate_total_count") * Value(100)) / F("total_count"),
+                (F("candidate_total_count") * 100) / F("total_count"),
                 output_field=IntegerField(),
             ),
         )
-        .values("candidate", "candidate_total_count", "total_count", "percent")
+        .order_by("-percent")
+        .values(
+            "candidate__name",
+            "candidate__party",
+            "candidate",
+            "candidate_total_count",
+            "total_count",
+            "percent",
+        )
     )
-    print(list(election_group.values_list("percent", flat=True))[0])
-    context = {"total_count": total_count}
+    context = {"total_count": total_count, "election_group": election_group}
     return render(request, "detail.html", context)
