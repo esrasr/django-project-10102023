@@ -2,19 +2,85 @@
 {% load static %}
 
 {% block content %}
-
-<select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-    <option selected>Contry</option>
+{% csrf_token %}
+<select id='country-select' style="width:200px;margin: 5px;padding: 5px;border: 2px;" position ="relative" aria-label=".form-select-lg example">
+    <option selected> Contry </option>
     {% for c in country %}
-    <option value="1">{{ c.name}}</option>
+    <option value="{{c.id }}">{{ c.name}}</option>
     {% endfor %}
   </select>
 
-<select class="form-select form-select-sm" aria-label=".form-select-sm example">
-    <option selected>City</option>
-    <!-- <option value="1">One</option>
-    <option value="2">Two</option>
-    <option value="3">Three</option> -->
-</select>
+    <select  id='city-select' style="width:200px;margin: 5px;padding: 5px;border: 2px;" position ="relative" aria-label=".form-select-sm example" onchange="javascript:handleNextView(this)">
+        <option selected>City</option>
+    </select>
 
+    <!-- <button type="submit" style="width: 100px;margin: 5px;padding: 5px;border: 2px;" class="btn btn-dark">
+   
+        Result
+        </a>
+    </button>
+</form> -->
 {% endblock %}
+
+
+
+{% block content_row %}
+<br>
+<br>
+<br>
+<div class="row">
+    <div class="row">
+        <div class="col-lg-12 mb-4"">
+            <h5 class="h3 mb-0 text-blue-800">Candidates</h6>
+                <br>
+        </div>
+        {% for candidate in candidates %}
+
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="row no-gutters align-items-center">
+                <div class="card-body">
+
+                    {{candidate.name}}
+                    <div class="text-black-50 small">{{candidate.party}}</div>
+                </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+    $("#country-select").change(function () {
+        const instanceID = $(this).val();  // get the selected subject ID from the HTML dropdown list 
+        $.ajax({                       // initialize an AJAX request
+            type: "POST",
+            url: '{% url "election:get_city_ajax" %}',
+            data: {
+                'instanceID': instanceID,       // add the country id to the POST parameters
+                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val(),
+
+            },
+            success: function (data) {   // `data` is from `get_city_ajax` view function
+                let html_data = '<option value=""> City </option>';
+                data.forEach(function (data) {
+                    let detail_url = "{% url 'election:election_details' 0 %}".replace("0", data.id);
+
+                    html_data += `<option value="${detail_url}">${data.name}</option>`
+                });
+                $("#city-select").html(html_data); // replace the contents of the topic input with the data that came from the server
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript"> 
+    function handleNextView(el){ 
+        window.location.assign( el.value ); /* redirect on select */
+    } 
+    </script> 
+{% endblock javascript %}
