@@ -3,6 +3,9 @@
 
 {% block content %}
 {% csrf_token %}
+
+
+
 <select id='country-select' style="width:200px;margin: 5px;padding: 5px;border: 2px;" position ="relative" aria-label=".form-select-lg example">
     <option selected> Contry </option>
     {% for c in country %}
@@ -10,7 +13,7 @@
     {% endfor %}
   </select>
 
-    <select  id='city-select' style="width:200px;margin: 5px;padding: 5px;border: 2px;" position ="relative" aria-label=".form-select-sm example" onchange="javascript:handleNextView(this)">
+    <select  id='city-select' style="width:200px;margin: 5px;padding: 5px;border: 2px;" position ="relative" aria-label=".form-select-sm example"">
         <option selected>City</option>
     </select>
 
@@ -25,31 +28,44 @@
 
 
 {% block content_row %}
-<br>
-<br>
-<br>
-<div class="row">
-    <div class="row">
-        <div class="col-lg-12 mb-4"">
-            <h5 class="h3 mb-0 text-blue-800">Candidates</h6>
-                <br>
-        </div>
-        {% for candidate in candidates %}
-
-        <div class="col-xl-6 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="row no-gutters align-items-center">
-                <div class="card-body">
-
-                    {{candidate.name}}
-                    <div class="text-black-50 small">{{candidate.party}}</div>
-                </div>
-                </div>
-            </div>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
         {% endfor %}
+    </ul>
+    {% endif %}
+
+    <br>
+    <div class="row">
+            <div class="col-lg-12 mb-4"">
+                <h5 class="h3 mb-0 text-blue-800">Adaylar</h6>
+                    <br>
+            </div>
+            {% for candidate in candidates %}
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="row no-gutters align-items-center">
+                    <div class="card-body">
+
+                        {{candidate.name}}
+                        <div class="text-black-50 small">{{candidate.party}}</div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
     </div>
+<div class="row" id="container-fluid">
+ 
 </div>
+
 {% endblock %}
 
 
@@ -68,13 +84,44 @@
             success: function (data) {   // `data` is from `get_city_ajax` view function
                 let html_data = '<option value=""> City </option>';
                 data.forEach(function (data) {
-                    let detail_url = "{% url 'election:election_details' 0 %}".replace("0", data.id);
+                    // let detail_url = "{% url 'election:election_details' 0 %}".replace("0", data.id);
 
-                    html_data += `<option value="${detail_url}">${data.name}</option>`
+                    // html_data += `<option value="${detail_url}">${data.name}</option>`
+                    html_data += `<option value="${data.id} ">${data.name}</option>`
                 });
                 $("#city-select").html(html_data); // replace the contents of the topic input with the data that came from the server
-            }
+                $.ajax({
+                    type: "POST",
+                    url: '{% url "election:get_chart_ajax" %}',
+                    data: {
+                        'instanceID': instanceID,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    },
+                    success: function (chartData) {
+                        const chartContainer = document.getElementById("container-fluid");
+                        chartContainer.innerHTML = chartData.template_content;
+                    },
+              
+                });
+            },  
+ 
         });
+    });
+
+    $("#city-select").change(function () {
+        const instanceID = $(this).val();  // get the selected subject ID from the HTML dropdown list 
+        $.ajax({
+                    type: "POST",
+                    url: '{% url "election:get_city_chart_ajax" %}',
+                    data: {
+                        'instanceID': instanceID,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    },
+                    success: function (chartData) {
+                        const chartContainer = document.getElementById("container-fluid");
+                        chartContainer.innerHTML = chartData.template_content;
+                    }
+                });
     });
 </script>
 
