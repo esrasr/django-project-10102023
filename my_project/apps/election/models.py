@@ -103,7 +103,10 @@ class Election(BaseModel):
     candidate = models.ForeignKey(Candidates, on_delete=models.CASCADE)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     decription = models.CharField(max_length=100)
-    count = models.IntegerField()
+    count = models.PositiveIntegerField()
+    invalid_count = models.PositiveIntegerField(default=0)
+    box_number = models.CharField(default="S-000000")
+    date = models.DateField(default="2023-05-14")
     objects = ElectionManager()
 
     class Meta:
