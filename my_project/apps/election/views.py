@@ -10,10 +10,11 @@ from django.db.models import Sum, Count, F
 
 
 def index(request):
-    context = {
-        "country": Country.objects.filter(deleted=0).all(),
-        "candidates": Candidates.objects.filter(deleted=0).all(),
-    }
+    date = request.GET.get("date")
+    date_list = list(map(str, list(Election.objects.distinct("date").order_by("date").values_list("date", flat=True))))
+    if not date:
+        date = date_list[-1]
+    context = {"country": Country.objects.filter(deleted=0).all(), "candidates": Candidates.objects.filter(deleted=0, date=date).all(), "date_list": date_list, "date": date}
     return render(request, "select.html", context)
 
 
@@ -26,11 +27,12 @@ def get_city_ajax(request):
 
 def get_chart_ajax(request):
     if request.method == "POST":
+        date = request.POST.get("date")
         country_id = request.POST.get("instanceID")
-        total_count = Election.objects.country_total_count(country_id=country_id)
+        total_count = Election.objects.country_total_count(country_id=country_id, date=date)
         if total_count == 0:
             return JsonResponse({"template_content": ""})
-        election_group = Election.objects.get_country_percent(country_id=country_id, total_count=total_count)
+        election_group = Election.objects.get_country_percent(country_id=country_id, total_count=total_count, date=date)
         labels = []
         sizes = []
         for item in election_group:
@@ -46,11 +48,12 @@ def get_chart_ajax(request):
 def get_city_chart_ajax(request):
     if request.method == "POST":
         city_id = request.POST.get("instanceID")
-        total_count = Election.objects.city_total_count(city_id=city_id)
+        date = request.POST.get("date")
+        total_count = Election.objects.city_total_count(city_id=city_id, date=date)
         if total_count == 0:
             return JsonResponse({"template_content": ""})
 
-        election_group = Election.objects.get_city_percent(city_id=city_id, total_count=total_count)
+        election_group = Election.objects.get_city_percent(city_id=city_id, total_count=total_count, date=date)
         labels = []
         sizes = []
         for item in election_group:
@@ -63,8 +66,10 @@ def get_city_chart_ajax(request):
 
 
 def election_table(request):
+    date = request.GET.get("date")
     election_detail = (
-        Election.objects.select_related("city__country")
+        Election.objects.filter(date=date)
+        .select_related("city__country")
         .values("city")
         .annotate(
             candidate_total_count=Sum("count"),
@@ -73,18 +78,19 @@ def election_table(request):
             city_name=F("city__name"),
         )
         .order_by("country_name", "city_name")
-        .values("country_name", "city_name", "candidate_total_count", "candidate_count", "city_id")
+        .values("country_name", "city_name", "candidate_total_count", "candidate_count", "city_id", "date")
     )
-    context = {"election_detail": election_detail}
+    context = {"election_detail": election_detail, "date": date}
     return render(request, "election_table.html", context)
 
 
 def election_details(request, city_id):
-    total_count = Election.objects.city_total_count(city_id=city_id)
+    date = request.GET.get("date")
+    total_count = Election.objects.city_total_count(city_id=city_id, date=date)
     if total_count == 0:
         return JsonResponse({"template_content": ""})
 
-    election_group = Election.objects.get_city_percent(city_id=city_id, total_count=total_count)
+    election_group = Election.objects.get_city_percent(city_id=city_id, total_count=total_count, date=date)
     labels = []
     sizes = []
     for item in election_group:

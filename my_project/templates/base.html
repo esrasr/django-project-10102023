@@ -33,7 +33,9 @@
 
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            {% block sidebar %}
 
+            
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center"href="{% url 'election:homepage' %}">
                 <div class="sidebar-brand-icon rotate-n-15">
@@ -48,19 +50,10 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'election:homepage' %}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Seçim Sonuçları</span></a>
+                    <span>Güncel Seçim Sonuçları</span></a>
             </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Nav Item - Tables -->
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'election:election_table' %}">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Seçim Detayları</span></a>
-            </li>
-
+            
+            {% endblock %}
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 

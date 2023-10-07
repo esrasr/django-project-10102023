@@ -30,6 +30,7 @@ class City(BaseModel):
 class Candidates(BaseModel):
     name = models.CharField(max_length=100)
     party = models.CharField(max_length=20)
+    date = models.DateField(default="2023-05-14")
     # image
 
     class Meta:
@@ -44,15 +45,15 @@ class ElectionManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(deleted=0)
 
-    def country_total_count(self, country_id):
-        return self.filter(city__country__id=country_id).aggregate(total_count=Coalesce(models.Sum("count"), 0))["total_count"]
+    def country_total_count(self, country_id, date):
+        return self.filter(city__country__id=country_id, date=date).aggregate(total_count=Coalesce(models.Sum("count"), 0))["total_count"]
 
-    def city_total_count(self, city_id):
-        return self.filter(city__id=city_id).aggregate(total_count=Coalesce(models.Sum("count"), 0))["total_count"]
+    def city_total_count(self, city_id, date):
+        return self.filter(city__id=city_id, date=date).aggregate(total_count=Coalesce(models.Sum("count"), 0))["total_count"]
 
-    def get_country_percent(self, country_id, total_count):
+    def get_country_percent(self, country_id, total_count, date):
         return (
-            self.filter(city__country__id=country_id)
+            self.filter(city__country__id=country_id, date=date)
             .select_related("candidate")
             .values("candidate")
             .annotate(
@@ -74,9 +75,9 @@ class ElectionManager(models.Manager):
             )
         )
 
-    def get_city_percent(self, city_id, total_count):
+    def get_city_percent(self, city_id, total_count, date):
         return (
-            self.filter(city_id=city_id)
+            self.filter(city_id=city_id, date=date)
             .select_related("candidate")
             .values("candidate")
             .annotate(

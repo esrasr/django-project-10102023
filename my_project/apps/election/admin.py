@@ -13,12 +13,13 @@ class CityAdmin(admin.ModelAdmin):
 
 
 class CandidatesAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "party", "deleted"]
+    list_display = ["id", "name", "party", "deleted", "date"]
+    ordering = ["-date", "name"]
 
 
 class ElectionAdmin(admin.ModelAdmin):
-    list_display = ["id", "candidate", "city", "count", "deleted"]
-    ordering = ["candidate", "city"]
+    list_display = ["id", "candidate", "city", "count", "deleted", "date"]
+    ordering = ["-date", "candidate", "city"]
 
 
 admin.site.register(Country, CountryAdmin)
