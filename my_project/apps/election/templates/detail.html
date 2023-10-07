@@ -62,10 +62,10 @@
               <h6 class="m-0 font-weight-bold text-primary">Total Count</h6>
           </div>
           <div class="card-body">
-              <h4 class="small font-weight-bold">{{total_count}} <span
-                      class="float-right">20%</span></h4>
+              <h4 class="small font-weight-bold">Toplam Oy Sayısı: {{total_count}} <span
+                      class="float-right">100%</span></h4>
               <div class="progress mb-4">
-                  <div class="progress-bar bg-warning" role="progressbar" style="width: 20%"
+                  <div class="progress-bar bg-warning" role="progressbar" style="width: 100%"
                       aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
               
@@ -81,77 +81,119 @@
 <div class="row">
 
 
-    <!-- Area Chart -->
-    <div class="col-lg-6 mb-4" >
-      <div class="card shadow mb-4">
-          <!-- Card Header - Dropdown -->
-          <div
-              class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-              <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-              <div class="dropdown no-arrow">
-                  <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                      aria-labelledby="dropdownMenuLink">
-                      <div class="dropdown-header">Dropdown Header:</div>
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                  </div>
-              </div>
-          </div>
-          <!-- Card Body -->
-          <div class="card-body">
-              <div class="chart-area">
-              
-              </div>
-          </div>
-      </div>
-  </div>
-  <!-- Pie Chart -->
-  <div class="col-lg-6 mb-4">
-    <div class="card shadow mb-4">
-        <!-- Card Header - Dropdown -->
-        <div
-            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-            <div class="dropdown no-arrow">
-                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                    aria-labelledby="dropdownMenuLink">
-                    <div class="dropdown-header">Dropdown Header:</div>
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+
+          <!-- Donut Chart -->
+          <div class="col-xl-6 col-lg-5">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+             
+                <!-- Card Body -->
+                <div class="card-body">
+                    <img src="data:image/png;base64, {{img_base64}}" alt="Pie Chart" style="width: 100%;height: 100%; object-fit: contain;"/>
+                
+
+                  
                 </div>
             </div>
         </div>
-        <!-- Card Body -->
-        <div class="card-body">
-            <div class="chart-pie pt-4 pb-2">
-                <canvas id="myPieChart"></canvas>
-            </div>
-            <div class="mt-4 text-center small">
-                <span class="mr-2">
-                    <i class="fas fa-circle text-primary"></i> Direct
-                </span>
-                <span class="mr-2">
-                    <i class="fas fa-circle text-success"></i> Social
-                </span>
-                <span class="mr-2">
-                    <i class="fas fa-circle text-info"></i> Referral
-                </span>
+        <div class="col-xl-6 col-lg-5">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+             
+                <!-- Card Body -->
+                <div class="card-body">
+                    
+                    <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            Kazanan
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{winner_name.candidate__name}}</div>
+                                    </div>
+                                    
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                             Toplam Oy Sayısı
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{winner_name.candidate_total_count}}</div>
+                                    </div>
+                                      
+                                </div>
+                                
+                    </div>
+                    
+                    
+                    {% for item in result %}
+                    <hr>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Kaybeden
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{item.candidate__name}}</div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                     Toplam Oy Sayısı
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{item.candidate_total_count}}</div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                    {% endfor %}
+                    
+               
+                  
+                   
+            
+                </div>
             </div>
         </div>
-    </div>
+
+
 </div>
-          
+<div class="row">
+        <!-- Area Chart -->
+        <div class="col-lg-12 mb-4" >
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Detaylı Oylama Listesi</h6>
+       
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-area">
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Aday</th>
+                                <th scope="col">Açıklama</th>
+                                <th scope="col">Oy Sayısı</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in table %}
+                              <tr>
+                                <th scope="row">1</th>
+                                <td>{{item.candidate}}</td>
+                                <td>{{item.description}}</td>
+                                <td>{{item.count}}</td>
+                          
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
 </div>
 {% endblock%}

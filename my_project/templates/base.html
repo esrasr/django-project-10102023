@@ -48,7 +48,7 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'election:homepage' %}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    <span>Seçim Sonuçları</span></a>
             </li>
 
             <!-- Divider -->
@@ -58,16 +58,16 @@
  
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="{% url "election:charts" %}">
+                <a class="nav-link" href="{% url "election:homepage" %}">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Charts</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" href="{% url 'election:election_table' %}">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
+                    <span>Seçim Detayları</span></a>
             </li>
 
             <!-- Divider -->

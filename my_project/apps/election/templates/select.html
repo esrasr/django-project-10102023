@@ -84,9 +84,7 @@
             success: function (data) {   // `data` is from `get_city_ajax` view function
                 let html_data = '<option value=""> City </option>';
                 data.forEach(function (data) {
-                    // let detail_url = "{% url 'election:election_details' 0 %}".replace("0", data.id);
-
-                    // html_data += `<option value="${detail_url}">${data.name}</option>`
+                   
                     html_data += `<option value="${data.id} ">${data.name}</option>`
                 });
                 $("#city-select").html(html_data); // replace the contents of the topic input with the data that came from the server
