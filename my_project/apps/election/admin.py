@@ -15,6 +15,7 @@ class CityAdmin(admin.ModelAdmin):
 class CandidatesAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "party", "deleted"]
 
+
 class ElectionAdmin(admin.ModelAdmin):
     list_display = ["id", "candidate", "city", "count", "deleted"]
     ordering = ["candidate", "city"]

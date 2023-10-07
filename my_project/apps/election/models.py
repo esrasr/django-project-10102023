@@ -108,27 +108,3 @@ class Election(BaseModel):
 
     class Meta:
         db_table = "election"
-
-    @classmethod
-    def get_percent(cls, total_count):
-        return (
-            cls.objects.select_related("candidate")
-            .values("candidate")
-            .annotate(
-                candidate_total_count=models.Sum("count"),
-                total_count=models.Value(total_count),
-                percent=models.ExpressionWrapper(
-                    (models.F("candidate_total_count") * 100) / F("total_count"),
-                    output_field=models.IntegerField(),
-                ),
-            )
-            .order_by("-percent")
-            .values(
-                "candidate__name",
-                "candidate__party",
-                "candidate",
-                "candidate_total_count",
-                "total_count",
-                "percent",
-            )
-        )
