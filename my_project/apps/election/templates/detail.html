@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content_row %}
+<!-- Content Row -->
+<div class="row">
+
+          <!-- Content Column -->
+    <div class="col-lg-6 mb-4" >
+
+        <!-- Project Card Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Candidates</h6>
+            </div>
+            <div class="card-body">
+                {% for election in election_group %}
+                <h4 class="small font-weight-bold">{{election.candidate__name}} - {{election.candidate__party}}<span
+                        class="float-right">{{election.percent}}%</span></h4>
+                <div class="progress mb-4">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: {{ election.percent }}%"
+                        aria-valuenow="{{election.percent}}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                {% endfor %}
+     
+                <!-- <h4 class="small font-weight-bold">Sales Tracking <span
+                        class="float-right">40%</span></h4>
+                <div class="progress mb-4">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <h4 class="small font-weight-bold">Customer Database <span
+                        class="float-right">60%</span></h4>
+                <div class="progress mb-4">
+                    <div class="progress-bar" role="progressbar" style="width: 60%"
+                        aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <h4 class="small font-weight-bold">Payout Details <span
+                        class="float-right">80%</span></h4>
+                <div class="progress mb-4">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
+                        aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <h4 class="small font-weight-bold">Account Setup <span
+                        class="float-right">Complete!</span></h4>
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div> -->
+            </div>
+        </div>
+
+
+    </div>
+    <!-- Content Column -->
+    <div class="col-lg-6 mb-4" >
+
+      <!-- Project Card Example -->
+      <div class="card shadow mb-4">
+          <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Total Count</h6>
+          </div>
+          <div class="card-body">
+              <h4 class="small font-weight-bold">Toplam Oy Sayısı: {{total_count}} <span
+                      class="float-right">100%</span></h4>
+              <div class="progress mb-4">
+                  <div class="progress-bar bg-warning" role="progressbar" style="width: 100%"
+                      aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              
+          </div>
+      </div>
+
+
+  </div>
+
+</div>
+
+<!-- Content Row -->
+<div class="row">
+
+
+
+          <!-- Donut Chart -->
+          <div class="col-xl-6 col-lg-5">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+             
+                <!-- Card Body -->
+                <div class="card-body">
+                    <img src="data:image/png;base64, {{img_base64}}" alt="Pie Chart" style="width: 100%;height: 100%; object-fit: contain;"/>
+                
+
+                  
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-5">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+             
+                <!-- Card Body -->
+                <div class="card-body">
+                    
+                    <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            Kazanan
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{winner_name.candidate__name}}</div>
+                                    </div>
+                                    
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                             Toplam Oy Sayısı
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{winner_name.candidate_total_count}}</div>
+                                    </div>
+                                      
+                                </div>
+                                
+                    </div>
+                    
+                    
+                    {% for item in result %}
+                    <hr>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Kaybeden
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{item.candidate__name}}</div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                     Toplam Oy Sayısı
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{item.candidate_total_count}}</div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                    {% endfor %}
+                    
+               
+                  
+                   
+            
+                </div>
+            </div>
+        </div>
+
+
+</div>
+<div class="row">
+        <!-- Area Chart -->
+        <div class="col-lg-12 mb-4" >
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Detaylı Oylama Listesi</h6>
+       
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-area">
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Aday</th>
+                                <th scope="col">Açıklama</th>
+                                <th scope="col">Oy Sayısı</th>
+                                <th scope="col">Geçersiz Oy Sayısı</th>
+                                <th scope="col">Sandık Numarası</th>
+                                <th scope="col">Tarih</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in table %}
+                              <tr>
+                                <th scope="row">1</th>
+                                <td>{{item.candidate}}</td>
+                                <td>{{item.description}}</td>
+                                <td>{{item.count}}</td>
+                                <td>{{item.invalid_count}}</td>
+                                <td>{{item.box_number}}</td>
+                                <td>{{item.date}}</td>
+                          
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+</div>
+{% endblock%}

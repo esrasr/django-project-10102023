@@ -1,0 +1,82 @@
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Seçim Sonuçları</h1>
+    <!-- Content Row -->
+    <div class="row">
+
+
+        <!-- Donut Chart -->
+        <div class="col-xl-6 col-lg-5">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+             
+                <!-- Card Body -->
+                <div class="card-body">
+                    <img src="data:image/png;base64, {{img_base64}}" alt="Pie Chart" style="width: 100%;height: 100%; object-fit: contain;"/>
+                
+
+                  
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-5">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+             
+                <!-- Card Body -->
+                <div class="card-body">
+                    
+                    <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            Kazanan
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{winner_name.candidate__name}}</div>
+                                    </div>
+                                    
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                             Toplam Oy Sayısı
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{winner_name.candidate_total_count}}</div>
+                                    </div>
+                                      
+                                </div>
+                                
+                    </div>
+                    
+                    
+                    {% for item in result %}
+                    <hr>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Kaybeden
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{item.candidate__name}}</div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                     Toplam Oy Sayısı
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{item.candidate_total_count}}</div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                    {% endfor %}
+                    
+               
+                  
+                   
+            
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

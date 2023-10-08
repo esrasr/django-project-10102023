@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+
+  web:
+    container_name: django_web
+    build:
+      context: .
+      dockerfile: my_project/Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./my_project:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - .env/.env
+    networks:
+      - mydjango_network
+  db:
+    image: postgres
+    container_name: django_postgres
+    restart: always
+    env_file:
+      - .env/.pg_env
+
+    ports:
+      - "5432:5432"
+ 
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - mydjango_network
+networks:
+  mydjango_network:
+    name: mydjango_network

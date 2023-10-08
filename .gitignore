@@ -2,10 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+staticfiles/
+postgres-data/
 # C extensions
 *.so
-
+/staticfiles/
 # Distribution / packaging
 .Python
 build/
@@ -151,7 +152,7 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-
+.vscode/
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore

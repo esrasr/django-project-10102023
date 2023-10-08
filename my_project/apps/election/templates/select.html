@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block sidebar %}
+
+            
+<!-- Sidebar - Brand -->
+<a class="sidebar-brand d-flex align-items-center justify-content-center"href="{% url 'election:homepage' %}">
+    <div class="sidebar-brand-icon rotate-n-15">
+    </div>
+    <div class="sidebar-brand-text mx-3">Admin</div>
+</a>
+
+<!-- Divider -->
+<hr class="sidebar-divider my-0">
+
+<!-- Nav Item - Dashboard -->
+<li class="nav-item active">
+    <a class="nav-link" href="{% url 'election:homepage' %}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Güncel Seçim Sonuçları</span></a>
+</li>
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+        aria-expanded="true" aria-controls="collapseUtilities">
+        <i class="fas fa-fw fa-wrench"></i>
+        <span>Tüm Seçim Sonuçları</span>
+    </a>
+    <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+        data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Seçim Tarihleri:</h6>
+            {% for date in date_list %}
+            <a class="collapse-item" href="{% url 'election:homepage' %}?date={{ date }}">{{ date }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</li>
+
+<!-- Divider -->
+<hr class="sidebar-divider">
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDetail"
+        aria-expanded="true" aria-controls="collapseDetail">
+        <i class="fas fa-fw fa-wrench"></i>
+        <span>Seçim Detayları</span>
+    </a>
+    <div id="collapseDetail" class="collapse" aria-labelledby="headingUtilities"
+        data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Seçim Tarihleri:</h6>
+            {% for date in date_list %}
+            <a class="collapse-item" href="{% url 'election:election_table' %}?date={{ date }}">{{ date }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</li>
+
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+
+
+
+<select id='country-select' style="width:200px;margin: 5px;padding: 5px;border: 2px;" position ="relative" aria-label=".form-select-lg example">
+    <option selected> Contry </option>
+    {% for c in country %}
+    <option value="{{c.id }}">{{ c.name}}</option>
+    {% endfor %}
+  </select>
+
+    <select  id='city-select' style="width:200px;margin: 5px;padding: 5px;border: 2px;" position ="relative" aria-label=".form-select-sm example"">
+        <option selected>City</option>
+    </select>
+
+    <!-- <button type="submit" style="width: 100px;margin: 5px;padding: 5px;border: 2px;" class="btn btn-dark">
+   
+        Result
+        </a>
+    </button>
+</form> -->
+{% endblock %}
+
+
+
+{% block content_row %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <br>
+    <div class="row">
+            <div class="col-lg-12 mb-4"">
+                <h5 class="h3 mb-0 text-blue-800">Adaylar</h6>
+                    <br>
+            </div>
+            {% for candidate in candidates %}
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="row no-gutters align-items-center">
+                    <div class="card-body">
+
+                        {{candidate.name}}
+                        <div class="text-black-50 small">{{candidate.party}}</div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+    </div>
+<div class="row" id="container-fluid">
+ 
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+    $("#country-select").change(function () {
+        const instanceID = $(this).val();  // get the selected subject ID from the HTML dropdown list 
+        $.ajax({                       // initialize an AJAX request
+            type: "POST",
+            url: '{% url "election:get_city_ajax" %}',
+            data: {
+                'instanceID': instanceID,       // add the country id to the POST parameters
+                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val(),
+
+            },
+            success: function (data) {   // `data` is from `get_city_ajax` view function
+                let html_data = '<option value=""> City </option>';
+                data.forEach(function (data) {
+                   
+                    html_data += `<option value="${data.id} ">${data.name}</option>`
+                });
+                $("#city-select").html(html_data); // replace the contents of the topic input with the data that came from the server
+                $.ajax({
+                    type: "POST",
+                    url: '{% url "election:get_chart_ajax" %}',
+                    data: {
+                        'instanceID': instanceID,
+                        'date': "{{ date }}",
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    },
+                    success: function (chartData) {
+                        const chartContainer = document.getElementById("container-fluid");
+                        chartContainer.innerHTML = chartData.template_content;
+                    },
+              
+                });
+            },  
+ 
+        });
+    });
+
+    $("#city-select").change(function () {
+        const instanceID = $(this).val();  // get the selected subject ID from the HTML dropdown list 
+        $.ajax({
+                    type: "POST",
+                    url: '{% url "election:get_city_chart_ajax" %}',
+                    data: {
+                        'instanceID': instanceID,
+                        'date': "{{ date }}",
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    },
+                    success: function (chartData) {
+                        const chartContainer = document.getElementById("container-fluid");
+                        chartContainer.innerHTML = chartData.template_content;
+                    }
+                });
+    });
+</script>
+
+<script type="text/javascript"> 
+    function handleNextView(el){ 
+        window.location.assign( el.value ); /* redirect on select */
+    } 
+    </script> 
+{% endblock javascript %}
