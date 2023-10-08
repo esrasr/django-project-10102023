@@ -13,7 +13,10 @@ def index(request):
     date = request.GET.get("date")
     date_list = list(map(str, list(Election.objects.distinct("date").order_by("date").values_list("date", flat=True))))
     if not date:
-        date = date_list[-1]
+        try:
+            date = date_list[-1]
+        except IndexError as e:
+            date = "1000-01-01"
     context = {"country": Country.objects.filter(deleted=0).all(), "candidates": Candidates.objects.filter(deleted=0, date=date).all(), "date_list": date_list, "date": date}
     return render(request, "select.html", context)
 

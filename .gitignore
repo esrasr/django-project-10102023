@@ -2,10 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+staticfiles/
+postgres-data/
 # C extensions
 *.so
-
+/staticfiles/
 # Distribution / packaging
 .Python
 build/
