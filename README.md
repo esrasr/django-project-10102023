@@ -30,3 +30,8 @@ docker-compose build
 docker-compose up
 ```
 Follow these steps and, postgre and web applications will work
+## Admin Panel
+```
+python manage.py createsuperuser
+http://localhost:8000/admin
+```
