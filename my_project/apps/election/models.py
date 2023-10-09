@@ -61,7 +61,7 @@ class ElectionManager(models.Manager):
                 total_count=models.Value(total_count),
                 percent=models.ExpressionWrapper(
                     (models.F("candidate_total_count") * 100) / models.F("total_count"),
-                    output_field=models.IntegerField(),
+                    output_field=models.DecimalField(),
                 ),
             )
             .order_by("-percent")
@@ -85,7 +85,7 @@ class ElectionManager(models.Manager):
                 total_count=models.Value(total_count),
                 percent=models.ExpressionWrapper(
                     (models.F("candidate_total_count") * 100) / models.F("total_count"),
-                    output_field=models.IntegerField(),
+                    output_field=models.DecimalField(),
                 ),
             )
             .order_by("-percent")
