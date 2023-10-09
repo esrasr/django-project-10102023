@@ -43,7 +43,7 @@ def get_chart_ajax(request):
             sizes.append(item["percent"])
 
         image = get_pie_chart(labels, sizes)
-        template_content = render_to_string("pie_chart.html", {"img_base64": image, "winner_name": election_group[0], "result": election_group[1:]})
+        template_content = render_to_string("pie_chart.html", {"img_base64": image, "winner_name": election_group[0], "result": election_group[1:], "total_count": total_count})
 
         return JsonResponse({"template_content": template_content})
 
@@ -63,7 +63,7 @@ def get_city_chart_ajax(request):
             labels.append(item["candidate__name"])
             sizes.append(item["percent"])
         image = get_pie_chart(labels, sizes)
-        template_content = render_to_string("pie_chart.html", {"img_base64": image, "winner_name": election_group[0], "result": election_group[1:]})
+        template_content = render_to_string("pie_chart.html", {"img_base64": image, "winner_name": election_group[0], "result": election_group[1:], "total_count": total_count})
 
         return JsonResponse({"template_content": template_content})
 
